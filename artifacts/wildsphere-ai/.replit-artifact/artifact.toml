@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "WildSphere AI"
+description = "An AI-powered biodiversity explorer for identifying species from photos and bird calls, discovering country biodiversity, and encouraging outdoor nature missions."
+version = "1.0.0"
+id = "artifacts/wildsphere-ai"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22058
+
+[services.development]
+run = "pnpm --filter @workspace/wildsphere-ai run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/wildsphere-ai", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/wildsphere-ai/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22058"
+BASE_PATH = "/"

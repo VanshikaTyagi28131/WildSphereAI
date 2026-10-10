@@ -1,0 +1,473 @@
+Build a complete, beautiful, fully functional full-stack web application called **WildSphere AI**.
+
+Tagline: **Hear Nature. See Life. Explore the Planet.**
+
+I am a beginner developer participating in an AI hackathon with the theme “Touch Grass.” I have limited time because my exams are going on, so I need you to build the application for me rather than just explain how to code it.
+
+Do not create only a landing page or a static UI. Build the frontend, backend, real AI integrations, interactive world map, and functional features. Run the application, test it, fix errors, and clearly tell me what I need to configure manually.
+
+# 1. PROJECT IDEA
+
+WildSphere AI is an AI-powered biodiversity discovery platform that helps people explore animals, birds, and plants through photographs, wildlife sounds, and an interactive world map.
+
+Users should be able to:
+
+1. Upload a picture of an animal, bird, or plant to identify it.
+2. Upload a bird-call recording to identify likely bird species.
+3. Explore an interactive world map and click countries to discover their representative animals, birds, and plants.
+4. Learn about species, habitats, geographic ranges, and conservation information from reliable sources.
+5. Complete real-world outdoor missions through a feature called WildQuest.
+6. Save discoveries in a personal nature journal.
+
+The main goal is to make technology encourage people to explore nature rather than spend more time on screens.
+
+# 2. TECHNOLOGY STACK
+
+Use the following stack where compatible with the development environment:
+
+- Frontend: React, TypeScript, Vite, and Tailwind CSS.
+- Backend: Node.js, TypeScript, and Express, or a compatible full-stack backend.
+- World map: react-simple-maps or another reliable interactive world-map library.
+- Main AI: a vision-capable open-weight Gemma model, such as Gemma 3 4B Instruct, through a compatible inference provider.
+- Bird audio recognition: a genuine BirdNET-compatible inference implementation or another documented bird-sound classification service.
+- Biodiversity data: iNaturalist API and other appropriate documented biodiversity data sources.
+- Image handling: appropriate image-processing and validation libraries.
+- Storage: browser localStorage for the MVP's nature journal.
+- Deployment: a supported Replit deployment.
+- Testing: basic frontend and backend tests.
+
+Choose compatible package versions and maintain a simple, understandable architecture.
+
+# 3. DESIGN AND USER EXPERIENCE
+
+The website must look premium, modern, beautiful, and professionally designed.
+
+Design direction:
+- Forest green, moss green, sage green, warm ivory, and subtle earthy accents.
+- Beautiful wildlife and botanical photography.
+- Elegant typography and a clean visual hierarchy.
+- Large hero section with an immersive nature photograph.
+- Rounded species cards, subtle shadows, generous spacing, and tasteful animations.
+- A beautiful interactive world map.
+- Polished loading animations, skeletons, error messages, and empty states.
+- Responsive desktop, tablet, and mobile layouts.
+- Accessible text contrast, keyboard navigation, and visible focus indicators.
+
+Avoid a generic AI dashboard appearance. Make it feel like a premium biodiversity explorer and digital field guide.
+
+# 4. PAGES AND NAVIGATION
+
+Create these pages:
+
+1. Home
+2. Identify Species
+3. Bird Sound Explorer
+4. Explore World Map
+5. Species Details
+6. WildQuest
+7. My Nature Journal
+8. About and Open Innovation
+
+The navigation bar should include the WildSphere AI logo, Explore, Identify, Soundscape, WildQuest, and My Journal.
+
+All navigation links and buttons must work.
+
+# 5. HOMEPAGE
+
+Create a visually stunning homepage.
+
+Hero heading:
+"The wild world is closer than you think."
+
+Subtitle:
+"Discover animals, birds, and plants through pictures, sounds, and the world's biodiversity."
+
+Add two main buttons:
+- Identify a Species
+- Explore the World
+
+Include:
+- A beautiful nature-inspired hero background.
+- Three cards for photo identification, bird-sound recognition, and country exploration.
+- A preview of the interactive world map.
+- Featured species cards.
+- A WildQuest outdoor challenge.
+- A short explanation of the AI technology.
+- A footer with data sources, privacy information, and project details.
+
+# 6. FEATURE ONE: AI IMAGE IDENTIFICATION
+
+Build a fully functional image-identification interface.
+
+Allow users to:
+- Upload JPG, JPEG, PNG, or WebP photographs.
+- Preview and replace an uploaded image.
+- Choose Animal, Bird, Plant, or Not Sure.
+- Optionally select a country to improve identification context.
+- Click an Analyze button.
+- See a loading state while analysis runs.
+
+Use a real vision-capable Gemma model through a compatible inference provider.
+
+The backend must send the uploaded image to the actual model and return a useful response.
+
+Do not silently substitute Gemini, GPT, Claude, or another closed model for Gemma.
+
+If the chosen provider does not support image input for the selected Gemma model, identify the compatibility issue and suggest a real supported integration. Never claim a connection works without testing it.
+
+Show these results when supported by evidence:
+- Common name.
+- Scientific name.
+- Species category.
+- Visible identifying characteristics.
+- Habitat.
+- Geographic range.
+- Diet or ecological role.
+- Two interesting facts.
+- Conservation status, with a reliable source when available.
+- Similar species.
+- Uncertainty or limitations.
+- Links to reliable references.
+
+Include actions:
+- Save Discovery
+- Explore Species
+- Explore Country
+- Create WildQuest
+
+Do not invent numerical confidence scores. Display a score only if the underlying classifier provides a meaningful one.
+
+If the photo is blurry or ambiguous, explain the uncertainty rather than inventing a species identification.
+
+Do not provide safety guarantees about unknown plants, mushrooms, or animals.
+
+# 7. FEATURE TWO: BIRD SOUND IDENTIFICATION
+
+Create a polished Bird Sound Explorer page.
+
+Allow users to:
+- Upload audio recordings.
+- Play recordings in the browser.
+- Display recording duration.
+- Select an optional country or habitat.
+- Click Analyze Sound.
+- View results and save discoveries.
+
+Support WAV, MP3, or other audio formats only when the configured inference service supports them.
+
+Use a real bird-sound identification model, such as a suitable BirdNET-based inference service.
+
+IMPORTANT:
+A bird metadata API is not the same as an audio-recognition model. The application must process the actual uploaded recording through a genuine audio-classification implementation.
+
+Show:
+- Likely bird species.
+- Common and scientific names when available.
+- Ranked candidate species.
+- Classifier confidence scores when genuinely supplied by the model.
+- Information about the detected sound.
+- Habitat and species information.
+- Reliable source links.
+- An uncertainty warning when the recording is noisy or inconclusive.
+
+Add an audio player and a clear loading state.
+
+If the audio service requires credentials, explain how to configure them. If the service is not configured, clearly show that the feature is unavailable rather than presenting fake detections.
+
+Prioritize bird calls first. Do not claim to recognize all animal sounds unless the selected model supports them.
+
+# 8. FEATURE THREE: INTERACTIVE WORLD BIODIVERSITY MAP
+
+This is one of the most important and distinctive features of WildSphere AI.
+
+Create an interactive world map displaying country boundaries.
+
+Requirements:
+- Show countries across the world.
+- Allow users to hover over and click individual countries.
+- Highlight the selected country.
+- Include country-name search.
+- Make the map responsive and visually attractive.
+- Clicking a country should open a side panel containing its biodiversity information.
+- Do not reload the entire page for every country selection.
+
+The country detail panel should contain:
+
+A. Country information
+- Country name.
+- Region or continent.
+- Flag when available.
+- Main habitat types.
+- Short biodiversity overview.
+
+B. Animals
+- Representative animals associated with the country.
+- Common and scientific names when supported.
+- Photographs and source attribution.
+- Habitat and geographic range.
+
+C. Birds
+- Representative bird species.
+- Common and scientific names.
+- Photographs, habitat, and useful facts.
+
+D. Plants
+- Representative native plants where reliable data is available.
+- Common and scientific names.
+- Photographs and habitat information.
+
+E. Exploration
+- A button to view species details.
+- A button to save the country to the nature journal.
+- A button to generate a country-specific WildQuest.
+
+Include filters:
+- All
+- Animals
+- Birds
+- Plants
+
+DATA ACCURACY IS CRITICAL.
+
+Use real, documented biodiversity data sources, such as the iNaturalist API and other suitable sources for species occurrence and native-range information.
+
+Distinguish clearly between:
+- Representative species.
+- Species observed in a country.
+- Frequently observed species in available records.
+- Native or endemic species when supported by reliable data.
+- Introduced or invasive species when documented.
+- Migratory species when relevant.
+
+Do not automatically claim that the most frequently observed species is the most common species in that country.
+
+Do not assume a species is native simply because it has been observed there.
+
+Show links to the underlying data sources and clearly communicate data limitations.
+
+Do not generate thousands of API requests to populate the entire map. Load country information when the user selects a country, and use reasonable caching and rate limiting.
+
+The map must display countries even when detailed biodiversity data is unavailable. In those cases, show a helpful message rather than invented information.
+
+# 9. FEATURE FOUR: SPECIES DETAIL PAGES
+
+Each species page should show:
+- Main image and attribution.
+- Common name and scientific name.
+- Taxonomic category.
+- Identification characteristics.
+- Habitat and geographic range.
+- Diet or ecological role when relevant.
+- Conservation status and its source, when available.
+- Similar species.
+- Countries where the species has been observed, where data supports it.
+- Related species.
+- Reliable reference links.
+
+Add buttons for saving the species, exploring its country, and generating a WildQuest.
+
+Keep AI-generated explanations separate from verified source-derived information.
+
+# 10. FEATURE FIVE: WILDQUEST
+
+This feature should make WildSphere AI stand out from ordinary AI identification apps.
+
+After an image identification, sound identification, or country exploration, suggest a practical outdoor activity.
+
+Examples:
+- Listen for three different bird calls.
+- Observe three different leaf shapes.
+- Watch pollinators from a safe distance.
+- Notice differences between flowers in a garden.
+- Spend five minutes observing animal behavior without disturbing wildlife.
+- Explore the sounds and habitats of a local park.
+
+Every mission should include:
+- Title.
+- Short description.
+- Estimated duration.
+- Difficulty.
+- Instructions.
+- What to observe.
+- Environmental and safety guidance.
+- A completion checkbox.
+- An optional reflection note.
+
+Use Gemma to generate contextual educational missions when configured. Validate generated output before displaying it.
+
+Never encourage users to approach dangerous wildlife, disturb nests, touch unknown plants, feed wild animals, or disclose sensitive locations of endangered species.
+
+# 11. FEATURE SIX: PERSONAL NATURE JOURNAL
+
+Build a functional journal without requiring registration.
+
+Users should be able to:
+- Save image discoveries.
+- Save audio discoveries.
+- Save species pages and country explorations.
+- Save completed WildQuest missions.
+- Add notes and dates.
+- Search saved entries.
+- Filter by category.
+- Delete entries.
+- Export the journal as JSON or CSV if practical.
+
+Use localStorage for the MVP.
+
+Ensure entries persist after refreshing the browser. Include a clear empty state and explain that the journal belongs to the current browser and is not automatically synchronized across devices.
+
+Do not permanently store uploaded media on a remote server unless explicitly implemented and disclosed.
+
+# 12. BACKEND AND API ROUTES
+
+Implement real backend endpoints with appropriate validation and error handling. Use these routes or equivalent routes that fit the framework:
+
+GET /api/health
+
+POST /api/identify/image
+
+POST /api/identify/audio
+
+GET /api/countries
+
+GET /api/countries/:code/biodiversity
+
+GET /api/species/:id
+
+GET /api/species/search?q=
+
+POST /api/wildquest/generate
+
+GET /api/config/status
+
+Requirements:
+- Keep model calls on the server.
+- Validate file types, sizes, and request parameters.
+- Set reasonable timeouts.
+- Handle missing credentials, rate limits, provider errors, and invalid model responses.
+- Return structured JSON responses.
+- Avoid exposing stack traces or secrets to the frontend.
+- Include basic request limiting.
+- Do not return fake success messages for unimplemented features.
+- Use reusable service modules for the AI and biodiversity integrations.
+
+# 13. OPEN-WEIGHT AI AND GEMMA
+
+The project should meaningfully use an open-weight model.
+
+Use a compatible Gemma vision model for image-based explanations and a genuine specialized audio classifier for bird-sound identification.
+
+Use Gemma for:
+- Explaining possible image-identification results.
+- Explaining scientific or ecological concepts in beginner-friendly language.
+- Generating safe outdoor missions.
+- Summarizing country biodiversity information from retrieved source data.
+
+Do not rely on Gemma alone for specialist bird-call classification or unsupported scientific facts.
+
+Do not use AI-generated species descriptions as a replacement for verified biodiversity data.
+
+Document the exact model, model license, inference provider, and limitations.
+
+Explain how open weights can enable developers to experiment with model behavior, change models, and potentially self-host inference where hardware and licensing permit.
+
+Do not claim the app is fully offline if it uses hosted APIs.
+
+# 14. API KEYS AND ENVIRONMENT VARIABLES
+
+Create an .env.example file with placeholder values only.
+
+Document the environment variables needed for:
+- Gemma inference.
+- Bird-audio inference, if required.
+- Biodiversity services, if authentication is required.
+- Backend configuration.
+
+Never place actual credentials in frontend code or commit them to GitHub.
+
+Use Replit Secrets or the platform's supported environment-variable manager.
+
+Before requiring any paid service or external account, tell me:
+1. What the service does.
+2. Whether it is free, usage-limited, or paid.
+3. Where to obtain credentials.
+4. Which secret name to configure.
+5. How to verify that it works.
+
+Do not assume that every integration requires an API key.
+
+# 15. RESPONSIBLE AI, PRIVACY, AND ATTRIBUTION
+
+- Explain that species identifications are predictions and can be wrong.
+- Use reliable data sources for conservation and distribution claims.
+- Provide source links and appropriate attribution.
+- Disclose when uploaded images or audio are sent to an external provider.
+- Keep API keys private.
+- Avoid collecting unnecessary personal information.
+- Avoid displaying sensitive locations of endangered species.
+- Do not provide definitive medical, veterinary, plant-edibility, or wildlife-safety advice.
+- Document the relevant model license and third-party data terms.
+
+# 16. TESTING
+
+Test the actual application.
+
+Verify:
+1. All pages load correctly.
+2. Navigation works.
+3. The map renders.
+4. Clicking a country updates the biodiversity panel.
+5. Country search works.
+6. Country data is source-backed and correctly labeled.
+7. Image uploads validate correctly.
+8. Real Gemma image inference works when configured.
+9. Missing AI credentials are handled gracefully.
+10. Real audio inference works when configured.
+11. Unconfigured audio detection is not falsely presented as working.
+12. Journal entries persist after refresh.
+13. Saving, searching, filtering, and deleting journal entries work.
+14. WildQuest missions are safe.
+15. Mobile layouts work.
+16. No secrets are exposed to the browser.
+17. Source links and data attribution work.
+
+Do not claim tests passed unless they were actually executed.
+
+# 17. DELIVERABLES
+
+Produce:
+- Complete runnable source code.
+- Beautiful responsive frontend.
+- Working backend.
+- Interactive biodiversity world map.
+- Genuine image-identification integration.
+- Genuine bird-sound inference integration, or clear documentation of what is still required.
+- Species details.
+- Nature journal.
+- WildQuest.
+- .env.example.
+- Detailed README.
+- Setup and deployment instructions.
+- Architecture documentation.
+- Test results.
+- A 90-second hackathon demo script.
+
+# 18. DEVELOPMENT PRIORITY
+
+Build in this order:
+
+FIRST: Create the complete visual design, navigation, interactive world map, country search, and country-detail panel.
+
+SECOND: Connect real biodiversity data and implement image identification with the configured Gemma model.
+
+THIRD: Integrate actual bird-sound classification.
+
+FOURTH: Complete species details, the nature journal, WildQuest, responsive design, testing, and documentation.
+
+If a service cannot be configured, report the exact blocker. Do not replace a real feature with fake results without clearly labeling the demo mode.
+
+Make sensible decisions independently. I am a beginner and do not want to manually write the entire application.
+
+Start building now. Create the files, run the app, test the core features, fix errors, and then give me a concise checklist of the remaining manual steps.
+
+**The final result must be visually beautiful, technically credible, genuinely connected to open-weight AI, and useful for encouraging real-world nature exploration.**
