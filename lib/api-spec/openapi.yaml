@@ -10,7 +10,26 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: biodiversity
+    description: Country and species information from public biodiversity sources
+  - name: identification
+    description: AI-assisted photo and audio identification
+  - name: wildquest
+    description: Safe outdoor learning missions
 paths:
+  /health:
+    get:
+      operationId: getApiHealth
+      tags: [health]
+      summary: API health alias
+      description: Returns server health status at the public API health path.
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
   /healthz:
     get:
       operationId: healthCheck
@@ -24,6 +43,197 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /config/status:
+    get:
+      operationId: getConfigStatus
+      tags: [health]
+      summary: Check configured app services
+      responses:
+        "200":
+          description: Service availability
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfigStatus"
+  /countries:
+    get:
+      operationId: getCountries
+      tags: [biodiversity]
+      summary: List countries for the biodiversity map
+      responses:
+        "200":
+          description: Country names and ISO codes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CountrySummary"
+  /countries/{code}/biodiversity:
+    get:
+      operationId: getCountryBiodiversity
+      tags: [biodiversity]
+      summary: Get recorded species for one country
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 3
+      responses:
+        "200":
+          description: Country information and recent iNaturalist records
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CountryBiodiversity"
+        "404":
+          description: Country or biodiversity records not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /species/search:
+    get:
+      operationId: searchSpecies
+      tags: [biodiversity]
+      summary: Search iNaturalist taxa by common or scientific name
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 100
+      responses:
+        "200":
+          description: Matching taxa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SpeciesRecord"
+  /species/featured:
+    get:
+      operationId: getFeaturedSpecies
+      tags: [biodiversity]
+      summary: Get a small set of sourced featured species
+      responses:
+        "200":
+          description: Featured species from iNaturalist
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SpeciesRecord"
+  /species/{id}:
+    get:
+      operationId: getSpecies
+      tags: [biodiversity]
+      summary: Get source-backed species details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: Taxon detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpeciesRecord"
+        "404":
+          description: Taxon not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /identify/image:
+    post:
+      operationId: identifyImage
+      tags: [identification]
+      summary: Identify a species from an image with Gemma
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/ImageIdentificationInput"
+      responses:
+        "200":
+          description: AI identification and any matching iNaturalist source
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdentificationResponse"
+        "400":
+          description: Invalid or unsupported image
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Gemma is not configured
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /identify/audio:
+    post:
+      operationId: identifyAudio
+      tags: [identification]
+      summary: Classify a bird call with BirdNET
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/AudioIdentificationInput"
+      responses:
+        "200":
+          description: Ranked results from an actual audio classifier
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AudioIdentificationResponse"
+        "400":
+          description: Invalid or unsupported recording
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: BirdNET inference is not configured
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /wildquest/generate:
+    post:
+      operationId: generateWildquest
+      tags: [wildquest]
+      summary: Generate a safe, contextual outdoor mission
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WildquestInput"
+      responses:
+        "200":
+          description: Safe outdoor mission
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WildquestMission"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +243,184 @@ components:
           type: string
       required:
         - status
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
+    ConfigStatus:
+      type: object
+      properties:
+        gemma:
+          type: object
+          properties:
+            configured: { type: boolean }
+            model: { type: string }
+            provider: { type: string }
+          required: [configured, model, provider]
+        birdAudio:
+          type: object
+          properties:
+            configured: { type: boolean }
+            model: { type: string }
+            provider: { type: string }
+          required: [configured, model, provider]
+        biodiversity:
+          type: object
+          properties:
+            configured: { type: boolean }
+            provider: { type: string }
+          required: [configured, provider]
+      required: [gemma, birdAudio, biodiversity]
+    CountrySummary:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        region: { type: string }
+        subregion: { type: string }
+        flag: { type: string }
+      required: [code, name, region, subregion, flag]
+    SpeciesRecord:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        scientificName: { type: string }
+        category: { type: string }
+        photoUrl: { type: ["string", "null"] }
+        attribution: { type: ["string", "null"] }
+        observationsCount: { type: ["integer", "null"] }
+        lastObserved: { type: ["string", "null"] }
+        description: { type: ["string", "null"] }
+        habitat: { type: ["string", "null"] }
+        range: { type: ["string", "null"] }
+        conservationStatus: { type: ["string", "null"] }
+        conservationSourceUrl: { type: ["string", "null"] }
+        sourceUrl: { type: string }
+        recordType: { type: string }
+      required:
+        [id, name, scientificName, category, photoUrl, attribution, observationsCount, lastObserved, description, habitat, range, conservationStatus, conservationSourceUrl, sourceUrl, recordType]
+    CountryBiodiversity:
+      type: object
+      properties:
+        country:
+          $ref: "#/components/schemas/CountrySummary"
+        overview: { type: string }
+        habitats:
+          type: array
+          items: { type: string }
+        animals:
+          type: array
+          items: { $ref: "#/components/schemas/SpeciesRecord" }
+        birds:
+          type: array
+          items: { $ref: "#/components/schemas/SpeciesRecord" }
+        plants:
+          type: array
+          items: { $ref: "#/components/schemas/SpeciesRecord" }
+        source: { type: string }
+        limitations:
+          type: array
+          items: { type: string }
+      required: [country, overview, habitats, animals, birds, plants, source, limitations]
+    ImageIdentificationInput:
+      type: object
+      properties:
+        image:
+          type: string
+          format: binary
+        category:
+          type: string
+          enum: [Animal, Bird, Plant, "Not Sure"]
+        country:
+          type: string
+      required: [image, category]
+    AudioIdentificationInput:
+      type: object
+      properties:
+        audio:
+          type: string
+          format: binary
+        country:
+          type: string
+        habitat:
+          type: string
+      required: [audio]
+    IdentificationResponse:
+      type: object
+      properties:
+        identification:
+          $ref: "#/components/schemas/SpeciesIdentification"
+        sourceMatch:
+          oneOf:
+            - $ref: "#/components/schemas/SpeciesRecord"
+            - type: "null"
+        model: { type: string }
+        source: { type: string }
+      required: [identification, sourceMatch, model, source]
+    SpeciesIdentification:
+      type: object
+      properties:
+        commonName: { type: string }
+        scientificName: { type: string }
+        category: { type: string }
+        identifyingCharacteristics:
+          type: array
+          items: { type: string }
+        habitat: { type: string }
+        geographicRange: { type: string }
+        ecologicalRole: { type: string }
+        interestingFacts:
+          type: array
+          items: { type: string }
+        conservationStatus: { type: string }
+        similarSpecies:
+          type: array
+          items: { type: string }
+        referenceLinks:
+          type: array
+          items: { type: string, format: uri }
+        uncertainty: { type: string }
+      required:
+        [commonName, scientificName, category, identifyingCharacteristics, habitat, geographicRange, ecologicalRole, interestingFacts, conservationStatus, similarSpecies, referenceLinks, uncertainty]
+    AudioIdentificationResponse:
+      type: object
+      properties:
+        available: { type: boolean }
+        message: { type: string }
+        candidates:
+          type: array
+          items:
+            type: object
+            properties:
+              commonName: { type: string }
+              scientificName: { type: string }
+              confidence: { type: number, minimum: 0, maximum: 1 }
+            required: [commonName, scientificName, confidence]
+        source: { type: string }
+      required: [available, message, candidates, source]
+    WildquestInput:
+      type: object
+      properties:
+        context: { type: string, maxLength: 300 }
+        country: { type: string, maxLength: 80 }
+        species: { type: string, maxLength: 120 }
+      required: [context]
+    WildquestMission:
+      type: object
+      properties:
+        title: { type: string }
+        description: { type: string }
+        durationMinutes: { type: integer, minimum: 1, maximum: 60 }
+        difficulty: { type: string, enum: [Easy, Moderate] }
+        instructions:
+          type: array
+          items: { type: string }
+        observe:
+          type: array
+          items: { type: string }
+        safetyGuidance: { type: string }
+      required: [title, description, durationMinutes, difficulty, instructions, observe, safetyGuidance]
 

@@ -47,6 +47,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@types/topojson-client": "^3.1.5",
     "@vitejs/plugin-react": "catalog:",
     "@workspace/api-client-react": "workspace:*",
     "class-variance-authority": "catalog:",
@@ -73,5 +74,10 @@
     "vite": "catalog:",
     "wouter": "^3.3.5",
     "zod": "catalog:"
+  },
+  "dependencies": {
+    "react-simple-maps": "^5.0.5",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
   }
 }
